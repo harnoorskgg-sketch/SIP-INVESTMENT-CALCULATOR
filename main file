@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to clear the terminal screen
+// Using a cross-platform approach: 'cls' for Windows, 'clear' for Unix/Linux
+void clearScreen() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void printHeader() {
+    printf("==========================================\n");
+    printf("       INVESTMENT CALCULATOR PRO           \n");
+    printf("==========================================\n");
+}
+
+int main() {
+    double monthlyAmount;
+    float annualRate;
+    int yearsInv;
+    int yearsStay;
+
+    clearScreen();
+    printHeader();
+
+    printf(" Monthly Investment : ");
+    if (scanf("%lf", &monthlyAmount) != 1) return 1;
+
+    printf(" Annual Interest Rate: ");
+    if (scanf("%f", &annualRate) != 1) return 1;
+
+    printf(" Investment Duration : ");
+    if (scanf("%d", &yearsInv) != 1) return 1;
+
+    printf(" Total Hold Period   : ");
+    if (scanf("%d", &yearsStay) != 1) return 1;
+
+    // Calculations
+    double monthlyRate = (annualRate / 100.0) / 12.0;
+    int totalMonthsInv = yearsInv * 12;
+    int totalMonthsStay = yearsStay * 12;
+    double totalCorpus = 0.0;
+
+    // Phase 1: Accumulation period
+    for (int i = 1; i <= totalMonthsInv; i++) {
+        totalCorpus = (totalCorpus + monthlyAmount) * (1.0 + monthlyRate);
+    }
+
+    // Phase 2: Growth without further contributions
+    int remainingMonths = totalMonthsStay - totalMonthsInv;
+    for (int i = 1; i <= remainingMonths; i++) {
+        totalCorpus = totalCorpus * (1.0 + monthlyRate);
+    }
+
+    clearScreen();
+    printHeader();
+    printf("\n--- INVESTMENT SUMMARY ---\n");
+    printf("Monthly Contribution: %.2f\n", monthlyAmount);
+    printf("Annual Rate         : %.2f%%\n", annualRate);
+    printf("Investment Period   : %d years\n", yearsInv);
+    printf("Total Duration     : %d years\n", yearsStay);
+    printf("--------------------------\n");
+    printf("FINAL AMOUNT       : %.2f\n", totalCorpus);
+    printf("--------------------------\n");
+    
+    printf("\nPress Enter to exit...");
+    getchar(); // Catch the trailing newline from the last scanf
+    getchar(); // Wait for the actual Enter key
+    
+    return 0;
+}
